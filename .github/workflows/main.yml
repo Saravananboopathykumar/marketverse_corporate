@@ -9,25 +9,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
+      # 1️⃣ Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Setup Node.js
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Install dependencies
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Build React/Vite app (postbuild generates sitemap)
+      # 4️⃣ Build project (postbuild generates sitemap)
       - name: Build project
         run: npm run build
 
-      # Configure AWS credentials
+      # 5️⃣ Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -35,16 +35,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Deploy dist folder to S3
+      # 6️⃣ Deploy dist folder to S3
       - name: Deploy to S3
         run: aws s3 sync ./dist s3://${{ secrets.S3_BUCKET }} --delete
 
-      # Invalidate CloudFront cache
+      # 7️⃣ Invalidate CloudFront cache
       - name: Invalidate CloudFront Cache
         run: aws cloudfront create-invalidation \
           --distribution-id ${{ secrets.CLOUDFRONT_ID }} \
           --paths "/*"
 
-      # Optional: Test AWS credentials
+      # 8️⃣ Optional: Test AWS credentials
       - name: Test AWS credentials
         run: aws sts get-caller-identity
