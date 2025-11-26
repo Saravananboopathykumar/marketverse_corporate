@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout code
+      # 1️⃣ Checkout
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Build project (postbuild generates sitemap)
+      # 4️⃣ Build project
       - name: Build project
         run: npm run build
 
@@ -35,16 +35,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 6️⃣ Deploy dist folder to S3
+      # 6️⃣ Deploy to S3
       - name: Deploy to S3
         run: aws s3 sync ./dist s3://${{ secrets.S3_BUCKET }} --delete
 
-      # 7️⃣ Invalidate CloudFront cache
+      # 7️⃣ Invalidate CloudFront
       - name: Invalidate CloudFront Cache
         run: aws cloudfront create-invalidation \
           --distribution-id ${{ secrets.CLOUDFRONT_ID }} \
           --paths "/*"
 
-      # 8️⃣ Optional test of AWS credentials
+      # 8️⃣ Test AWS credentials
       - name: Test AWS credentials
         run: aws sts get-caller-identity
