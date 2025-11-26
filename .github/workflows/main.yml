@@ -45,6 +45,6 @@ jobs:
           --distribution-id ${{ secrets.CLOUDFRONT_ID }} \
           --paths "/*"
 
-      # 8️⃣ Optional: Test AWS credentials
+      # 8️⃣ Optional test of AWS credentials
       - name: Test AWS credentials
         run: aws sts get-caller-identity
