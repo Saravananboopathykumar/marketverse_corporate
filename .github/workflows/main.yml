@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout the repo
+      # 1️⃣ Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Set up Node.js
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -23,15 +23,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Build React/Vite app
-      - name: Build project
+      # 4️⃣ Build project
+      - name: Build React app
         run: npm run build
 
-      # 5️⃣ Generate sitemap.xml after build
-    #  - name: Generate sitemap
-   #     run: npm run generate-sitemap
-
-      # 6️⃣ Configure AWS credentials
+      # 5️⃣ Configure AWS credentials <-- PLACE IT HERE
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -39,12 +35,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 7️⃣ Deploy dist folder to S3
+      # 6️⃣ Deploy to S3
       - name: Deploy to S3
         run: aws s3 sync ./dist s3://${{ secrets.S3_BUCKET }} --delete
 
-      # 8️⃣ Invalidate CloudFront cache
+      # 7️⃣ Invalidate CloudFront cache
       - name: Invalidate CloudFront Cache
         run: aws cloudfront create-invalidation \
           --distribution-id ${{ secrets.CLOUDFRONT_ID }} \
           --paths "/*"
+
+
+
