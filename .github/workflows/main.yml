@@ -28,8 +28,8 @@ jobs:
         run: npm run build
 
       # 5️⃣ Generate sitemap.xml after build
-      - name: Generate sitemap
-        run: npm run generate-sitemap
+    #  - name: Generate sitemap
+   #     run: npm run generate-sitemap
 
       # 6️⃣ Configure AWS credentials
       - name: Configure AWS credentials
